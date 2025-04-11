@@ -17,7 +17,7 @@ const LandingPage = () => {
             Go to App
           </button>
           <button
-            onClick={() => handleRedirect("https://mono-repo-cu9.pages.dev/blog")}
+            onClick={() => handleRedirect("https://mono-repo-cu9.pages.dev/blog/")}
             className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700"
           >
             Go to Blog
