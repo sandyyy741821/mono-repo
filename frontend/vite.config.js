@@ -4,8 +4,7 @@ import fs from 'fs';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [react()],
-  base: '/', 
+  plugins: [react()], 
   build: {
     outDir: 'dist',
   },
