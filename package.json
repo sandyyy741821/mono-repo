@@ -1,0 +1,9 @@
+{
+    "name": "mono-cloudflare-app",
+    "scripts": {
+      "build": "npm run build:landing && npm run build:blog",
+      "build:landing": "cd apps/landing && npm install && npm run build && mkdir -p ../../dist && cp -r dist/* ../../dist/",
+      "build:blog": "cd apps/blog && npm install && npm run build && mkdir -p ../../dist/blog && cp -r dist/* ../../dist/blog/"
+    }
+  }
+  

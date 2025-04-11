@@ -1,0 +1,6 @@
+name = "astro-blog"
+compatibility_date = "2025-04-10"
+
+[build]
+command = "npm install && npm run build"
+cwd = "."

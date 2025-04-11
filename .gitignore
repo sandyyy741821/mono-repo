@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.env
+.DS_Store
+# .gitignore
+
+# Node modules
+node_modules/
+
+# Distribution folder
+dist/
+
+# Environment variables
+.env
+
+# macOS system files
+.DS_Store
