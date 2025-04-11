@@ -2,7 +2,7 @@
   "name": "mono-cloudflare-app",
   "scripts": {
     "build": "npm run build:frontend && npm run build:blog",
-    "build:frontend": "mkdir -p dist && cd frontend && npm install && npm run build && cp -r dist/* ../dist",
-    "build:blog": "mkdir -p dist/blog && cd blog && npm install && npm run build && cp -r dist/* ../dist/"
+    "build:frontend": "cd frontend && npm install && npm run build && cp -r dist/* ../dist",
+    "build:blog": "cd blog && npm install && npm run build && cp -r dist/* ../dist/"
   }
 }
