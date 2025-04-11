@@ -3,8 +3,8 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'http://localhost:4321', 
-  base: '/blog/',
+  site: 'https://b7eb926f.mono-repo-cu9.pages.dev', 
+  base: '/blog', 
   outDir: 'dist',
   integrations: [mdx(), sitemap()],
 });
