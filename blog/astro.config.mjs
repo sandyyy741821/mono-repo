@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://mono-repo-cu9.pages.dev',
+  base: '/', 
   outDir: 'dist',
   trailingSlash: 'always',
   integrations: [mdx(), sitemap()],
