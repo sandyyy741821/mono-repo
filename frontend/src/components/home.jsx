@@ -11,7 +11,7 @@ const LandingPage = () => {
         <h1 className="text-4xl font-bold mb-8">Welcome to Example.com</h1>
         <div className="flex flex-col space-y-6">
           <button
-            onClick={() => handleRedirect("https://sub-mainfrontendnet.netlify.app/")}
+            onClick={() => handleRedirect("https://sub.mono-repo-cu9.pages.dev")}
             className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Go to App
