@@ -4,3 +4,5 @@ compatibility_date = "2025-04-10"
 [build]
 command = "npm install && npm run build"
 cwd = "."
+
+BUILD_TARGET=r2 npm run build
