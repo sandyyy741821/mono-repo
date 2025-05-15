@@ -1,7 +1,0 @@
-name = "frontend-app"
-pages_build_output_dir = "./dist"
-compatibility_date = "2025-04-10"
-
-[build]
-  command = "npm install && npm run build"
-
