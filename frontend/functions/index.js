@@ -6,7 +6,7 @@ export async function onRequestPost({ request }) {
     return new Response('Captcha missing!', { status: 400 });
   }
 
-  const secret = '0x4AAAAAABet_X5Bz4qcjsrfhEgeEFrrFlA'; 
+  const secret = '0x4AAAAAABet_X5Bz4qcjsrfhEgeEFrrFlA';  // Replace with your Turnstile secret
   const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -19,13 +19,9 @@ export async function onRequestPost({ request }) {
   const verifyResult = await verifyResponse.json();
 
   if (verifyResult.success) {
-    return new Response(null, {
-      status: 302,
-      headers: {
-        'Location': '/home',  
-      },
-    });
+    // Instead of redirect, respond with plain text
+    return new Response('Captcha Success', { status: 200 });
   } else {
-    return new Response('Captcha Failed!', { status: 400 });
+    return new Response('Captcha Failed', { status: 400 });
   }
 }
