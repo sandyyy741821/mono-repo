@@ -53,7 +53,7 @@ function Captcha() {
     setLoading(true);
 
     try {
-      const response = await fetch('/', {
+      const response = await fetch('https://loanzy-frontend.pages.dev/functions/index', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ 'cf-turnstile-response': token }),
