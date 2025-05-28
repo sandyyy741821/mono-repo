@@ -1,23 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Home from './Home'; 
 
 function Captcha() {
   const [token, setToken] = useState('');
   const [message, setMessage] = useState('');
+  const [verified, setVerified] = useState(false); 
   const captchaRef = useRef(null);
   const widgetIdRef = useRef(null);
-  const scriptLoadedRef = useRef(false); // To track if script was loaded already
+  const scriptLoadedRef = useRef(false);
 
   useEffect(() => {
-    // If Turnstile already loaded and widget rendered, skip
     if (widgetIdRef.current !== null) return;
 
-    // If turnstile object exists, render the widget
     if (window.turnstile) {
       renderTurnstile();
       return;
     }
 
-    // Load the Turnstile script only once
     if (!scriptLoadedRef.current) {
       scriptLoadedRef.current = true;
       const script = document.createElement('script');
@@ -28,7 +27,6 @@ function Captcha() {
       document.body.appendChild(script);
     }
 
-    // Cleanup if needed
     return () => {
       if (window.turnstile && widgetIdRef.current !== null) {
         window.turnstile.reset(widgetIdRef.current);
@@ -68,16 +66,23 @@ function Captcha() {
 
       const text = await response.text();
       setMessage(text);
+
+      if (response.ok) {
+        setVerified(true);
+      }
     } catch (err) {
       setMessage('Error verifying CAPTCHA');
     }
+  }
+
+  if (verified) {
+    return <Home />;
   }
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
       <h2>Cloudflare Turnstile CAPTCHA Test</h2>
       <form onSubmit={handleSubmit}>
-        {/* Only one div to render captcha */}
         <div ref={captchaRef}></div>
         <br />
         <button type="submit">Submit</button>
