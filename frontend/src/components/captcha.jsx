@@ -38,7 +38,7 @@ function Captcha() {
   function renderTurnstile() {
     if (window.turnstile && captchaRef.current && widgetIdRef.current === null) {
       widgetIdRef.current = window.turnstile.render(captchaRef.current, {
-        sitekey: '0x4AAAAAABet_YrZDjLmY4xM',
+        sitekey: '0x4AAAAAABet_YrZDjLmY4xM', // Use your sitekey here
         callback: (token) => {
           setToken(token);
         },
@@ -54,7 +54,7 @@ function Captcha() {
     }
 
     try {
-      const response = await fetch('loanzy-frontend.pages.dev/functions/index', {
+      const response = await fetch('https://loanzy-frontend.pages.dev/functions/index', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -69,16 +69,19 @@ function Captcha() {
 
       if (response.ok) {
         setVerified(true);
+      } else {
+        setMessage('CAPTCHA failed');
       }
     } catch (err) {
       setMessage('Error verifying CAPTCHA');
     }
   }
 
-if (verified) {
-  window.location.href = '/';
-  return null
-}
+  // Redirect to home if verified
+  if (verified) {
+    window.location.href = '/';
+    return null;
+  }
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
