@@ -1,12 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 function Captcha() {
   const [token, setToken] = useState('');
   const [message, setMessage] = useState('');
+  const captchaRef = useRef(null);
+  const widgetIdRef = useRef(null);
+  const scriptLoadedRef = useRef(false); // To track if script was loaded already
 
-  // This function is called when Turnstile generates a token
-  function onTurnstileSuccess(token) {
-    setToken(token);
+  useEffect(() => {
+    // If Turnstile already loaded and widget rendered, skip
+    if (widgetIdRef.current !== null) return;
+
+    // If turnstile object exists, render the widget
+    if (window.turnstile) {
+      renderTurnstile();
+      return;
+    }
+
+    // Load the Turnstile script only once
+    if (!scriptLoadedRef.current) {
+      scriptLoadedRef.current = true;
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      script.async = true;
+      script.defer = true;
+      script.onload = renderTurnstile;
+      document.body.appendChild(script);
+    }
+
+    // Cleanup if needed
+    return () => {
+      if (window.turnstile && widgetIdRef.current !== null) {
+        window.turnstile.reset(widgetIdRef.current);
+        widgetIdRef.current = null;
+      }
+    };
+  }, []);
+
+  function renderTurnstile() {
+    if (window.turnstile && captchaRef.current && widgetIdRef.current === null) {
+      widgetIdRef.current = window.turnstile.render(captchaRef.current, {
+        sitekey: '0x4AAAAAABet_YrZDjLmY4xM',
+        callback: (token) => {
+          setToken(token);
+        },
+      });
+    }
   }
 
   async function handleSubmit(e) {
@@ -16,7 +55,6 @@ function Captcha() {
       return;
     }
 
-    // Send token to your backend for verification
     try {
       const response = await fetch('/functions/index', {
         method: 'POST',
@@ -39,34 +77,12 @@ function Captcha() {
     <div style={{ textAlign: 'center', padding: '2rem' }}>
       <h2>Cloudflare Turnstile CAPTCHA Test</h2>
       <form onSubmit={handleSubmit}>
-        {/* Turnstile widget */}
-        <div
-          className="cf-turnstile"
-          data-sitekey="0x4AAAAAABet_YrZDjLmY4xM"
-          data-callback="onTurnstileSuccess"
-        ></div>
+        {/* Only one div to render captcha */}
+        <div ref={captchaRef}></div>
         <br />
         <button type="submit">Submit</button>
       </form>
       {message && <p>{message}</p>}
-
-      {/* Load the Turnstile API script */}
-      <script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-        async
-        defer
-      ></script>
-
-      {/* Script to bind the callback */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            function onTurnstileSuccess(token) {
-              window.dispatchEvent(new CustomEvent('turnstile-success', { detail: token }));
-            }
-          `,
-        }}
-      ></script>
     </div>
   );
 }
