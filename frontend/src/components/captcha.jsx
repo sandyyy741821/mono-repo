@@ -54,7 +54,6 @@ function Captcha() {
     setMessage('');
 
     try {
-      // Replace '/functions/index' with the actual backend route if different
       const response = await fetch('/functions/index', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
