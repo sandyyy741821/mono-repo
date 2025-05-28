@@ -54,7 +54,7 @@ function Captcha() {
     setMessage('');
 
     try {
-      const response = await fetch('/functions', {
+      const response = await fetch('/functions/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ 'cf-turnstile-response': token }),
