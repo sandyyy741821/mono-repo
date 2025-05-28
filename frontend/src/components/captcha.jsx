@@ -43,36 +43,42 @@ function Captcha() {
     }
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!token) {
-      alert('Please complete the CAPTCHA');
-      return;
-    }
-
-    setLoading(true);
-    setMessage('');
-
-    try {
-      const response = await fetch('/functions/index', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ 'cf-turnstile-response': token }),
-      });
-
-      if (response.redirected) {
-        window.location.href = response.url;
-        return;
-      }
-
-      const text = await response.text();
-      setMessage(text);
-    } catch (err) {
-      setMessage('Error verifying CAPTCHA');
-    } finally {
-      setLoading(false);
-    }
+async function handleSubmit(e) {
+  e.preventDefault();
+  if (!token) {
+    alert('Please complete the CAPTCHA');
+    return;
   }
+
+  setLoading(true);
+  setMessage('');
+
+  try {
+    const response = await fetch('/functions/index', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ 'cf-turnstile-response': token }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      setMessage(text || 'CAPTCHA verification failed');
+    } else {
+      const text = await response.text();
+      // Optional: You can check if your backend returns 'Captcha Success'
+      if (text === 'Captcha Success') {
+        window.location.href = '/home';  
+      } else {
+        setMessage(text);  
+      }
+    }
+  } catch (err) {
+    setMessage('Error verifying CAPTCHA');
+  } finally {
+    setLoading(false);
+  }
+}
+
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
