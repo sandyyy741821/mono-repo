@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Home from './Home'; 
+import Home from './home'; 
 
 function Captcha() {
   const [token, setToken] = useState('');
