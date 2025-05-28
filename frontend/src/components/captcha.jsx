@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Home from './home'; 
 
 function Captcha() {
   const [token, setToken] = useState('');
   const [message, setMessage] = useState('');
-  const [verified, setVerified] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const captchaRef = useRef(null);
   const widgetIdRef = useRef(null);
   const scriptLoadedRef = useRef(false);
@@ -38,10 +37,8 @@ function Captcha() {
   function renderTurnstile() {
     if (window.turnstile && captchaRef.current && widgetIdRef.current === null) {
       widgetIdRef.current = window.turnstile.render(captchaRef.current, {
-        sitekey: '0x4AAAAAABet_YrZDjLmY4xM', // Use your sitekey here
-        callback: (token) => {
-          setToken(token);
-        },
+        sitekey: '0x4AAAAAABet_YrZDjLmY4xM',
+        callback: setToken,
       });
     }
   }
@@ -53,34 +50,28 @@ function Captcha() {
       return;
     }
 
+    setLoading(true);
+
     try {
-      const response = await fetch('https://loanzy-frontend.pages.dev/functions/index', {
+      const response = await fetch('/functions/index', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          'cf-turnstile-response': token,
-        }),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ 'cf-turnstile-response': token }),
+        redirect: 'follow', 
       });
+
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
 
       const text = await response.text();
       setMessage(text);
-
-      if (response.ok) {
-        setVerified(true);
-      } else {
-        setMessage('CAPTCHA failed');
-      }
     } catch (err) {
       setMessage('Error verifying CAPTCHA');
+    } finally {
+      setLoading(false);
     }
-  }
-
-  // Redirect to home if verified
-  if (verified) {
-    window.location.href = '/';
-    return null;
   }
 
   return (
@@ -89,7 +80,7 @@ function Captcha() {
       <form onSubmit={handleSubmit}>
         <div ref={captchaRef}></div>
         <br />
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={loading}>{loading ? 'Verifying...' : 'Submit'}</button>
       </form>
       {message && <p>{message}</p>}
     </div>
