@@ -54,7 +54,7 @@ function Captcha() {
     }
 
     try {
-      const response = await fetch('/functions/index', {
+      const response = await fetch('loanzy-frontend.pages.dev/functions/index', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -75,9 +75,10 @@ function Captcha() {
     }
   }
 
-  if (verified) {
-    return <Home />;
-  }
+if (verified) {
+  window.location.href = '/';
+  return null
+}
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
